@@ -1,0 +1,100 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}Browse Movies - CineMatch{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="fas fa-film me-3"></i>Browse Movies
+    </h1>
+    <p class="page-subtitle">Explore our collection and find your next watch</p>
+</div>
+
+<div class="search-container">
+    <form method="get" class="row g-3">
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0">
+                    <i class="fas fa-search text-secondary"></i>
+                </span>
+                <input type="text" name="q" class="form-control border-start-0" 
+                       placeholder="Search movies..." value="{{ query }}"
+                       style="background: transparent;">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <select name="genre" class="form-select">
+                <option value="">All Genres</option>
+                {% for g in genres %}
+                    <option value="{{ g }}" {% if g == selected_genre %}selected{% endif %}>{{ g }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-filter me-2"></i>Filter
+            </button>
+        </div>
+        <div class="col-md-2">
+            <a href="{% url 'movie_list' %}" class="btn btn-secondary w-100">
+                <i class="fas fa-redo me-2"></i>Clear
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="mb-3">
+    <p class="text-secondary">
+        <i class="fas fa-info-circle me-2"></i>
+        {% if query or selected_genre %}
+            Showing {{ movies|length }} results
+            {% if query %} for "{{ query }}"{% endif %}
+            {% if selected_genre %} in {{ selected_genre }}{% endif %}
+        {% else %}
+            Showing all {{ movies|length }} movies
+        {% endif %}
+    </p>
+</div>
+
+<div class="row g-4">
+    {% for movie in movies %}
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <div class="movie-card">
+                <div class="movie-poster-container">
+                    {% if movie.poster %}
+                        <img src="{{ movie.poster.url }}" class="movie-poster" alt="{{ movie.title }}">
+                    {% else %}
+                        <div class="no-poster">
+                            <i class="fas fa-film"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h6 class="movie-title">{{ movie.title }}</h6>
+                    <p class="movie-meta mb-2">
+                        <span class="badge bg-secondary">{{ movie.genre }}</span>
+                    </p>
+                    <div class="rating-container mb-2">
+                        <span class="rating-stars"><i class="fas fa-star"></i></span>
+                        <span class="rating-value">{{ movie.avg_rating|floatformat:1 }}</span>
+                    </div>
+                    <a href="{% url 'movie_detail' movie.movie_id %}" class="btn btn-primary btn-sm w-100">
+                        View
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-film fa-3x mb-3 text-secondary" style="opacity: 0.3;"></i>
+                <h4 class="text-secondary">No movies found</h4>
+                <p class="text-secondary">Try adjusting your search or filters</p>
+                <a href="{% url 'movie_list' %}" class="btn btn-primary mt-3">
+                    <i class="fas fa-redo me-2"></i>Show All Movies
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

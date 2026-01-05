@@ -1,0 +1,78 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}Your Recommendations - CineMatch{% endblock %}
+
+{% block content %}
+<div class="page-header text-center mb-5">
+    <span class="recommendation-badge mb-3">
+        <i class="fas fa-magic me-2"></i>AI Powered
+    </span>
+    <h1 class="page-title">Movies Just For You</h1>
+    <p class="page-subtitle">Based on your unique taste and viewing history</p>
+</div>
+
+{% if recommendations %}
+    <div class="row g-4">
+        {% for rec in recommendations %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="movie-card">
+                    <div class="position-relative">
+                        <div class="movie-poster-container">
+                            {% if rec.movie_obj.poster %}
+                                <img src="{{ rec.movie_obj.poster.url }}" class="movie-poster" alt="{{ rec.title }}">
+                            {% else %}
+                                <div class="no-poster">
+                                    <i class="fas fa-film"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge" style="background: linear-gradient(45deg, #e50914, #ff6b6b); font-size: 0.9rem; padding: 0.4rem 0.7rem;">
+                                <i class="fas fa-star me-1"></i>{{ rec.predicted_rating|floatformat:1 }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="movie-title">{{ rec.title }}</h5>
+                        <p class="movie-meta mb-2">
+                            <span class="badge bg-secondary">{{ rec.genre }}</span>
+                            <span class="ms-2">{{ rec.year }}</span>
+                        </p>
+                        <p class="text-secondary small mb-3" style="font-size: 0.85rem;">
+                            <i class="fas fa-lightbulb me-1"></i>{{ rec.reason }}
+                        </p>
+                        <a href="{% url 'movie_detail' rec.movie_id %}" class="btn btn-primary btn-sm w-100">
+                            <i class="fas fa-play me-1"></i>View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center py-5" style="background: var(--card-bg); border-radius: 20px; padding: 4rem 2rem !important;">
+        <i class="fas fa-magic fa-4x mb-4" style="color: #e50914; opacity: 0.3;"></i>
+        <h3 class="mb-3">No Recommendations Yet</h3>
+        <p class="text-secondary mb-4" style="max-width: 600px; margin: 0 auto;">
+            We need to know your taste first! Rate at least 5 movies to get personalized recommendations powered by our AI algorithm.
+        </p>
+        {% if error %}
+            <div class="alert alert-danger d-inline-block mb-4">
+                <i class="fas fa-exclamation-triangle me-2"></i>{{ error }}
+            </div>
+        {% endif %}
+        <a href="{% url 'movie_list' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-film me-2"></i>Start Rating Movies
+        </a>
+    </div>
+{% endif %}
+
+{% if recommendations %}
+<div class="text-center mt-5 p-4" style="background: rgba(229, 9, 20, 0.05); border-radius: 15px; border: 1px solid rgba(229, 9, 20, 0.1);">
+    <p class="mb-0 text-secondary">
+        <i class="fas fa-info-circle me-2"></i>
+        These recommendations are generated using collaborative filtering algorithm powered by C
+    </p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}CineMatch - AI-Powered Movie Recommendations{% endblock %}
+
+{% block content %}
+<div class="hero-section position-relative">
+    <div class="position-relative" style="z-index: 1;">
+        <h1 class="hero-title">Discover Your Next Favorite Movie</h1>
+        <p class="hero-subtitle">AI-powered recommendations tailored just for you</p>
+        <div class="d-flex gap-3 flex-wrap">
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary btn-lg" href="{% url 'recommendations' %}">
+                    <i class="fas fa-magic me-2"></i>Get Recommendations
+                </a>
+                <a class="btn btn-secondary btn-lg" href="{% url 'movie_list' %}">
+                    <i class="fas fa-film me-2"></i>Browse Movies
+                </a>
+            {% else %}
+                <a class="btn btn-primary btn-lg" href="{% url 'register' %}">
+                    <i class="fas fa-rocket me-2"></i>Get Started Free
+                </a>
+                <a class="btn btn-secondary btn-lg" href="{% url 'movie_list' %}">
+                    <i class="fas fa-film me-2"></i>Explore Movies
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="mb-4 d-flex justify-content-between align-items-center">
+    <div>
+        <h2 class="mb-1" style="font-size: 2rem; font-weight: 600;">Featured Movies</h2>
+        <p class="text-secondary mb-0">Popular picks to get you started</p>
+    </div>
+    <a href="{% url 'movie_list' %}" class="btn btn-secondary">
+        View All <i class="fas fa-arrow-right ms-2"></i>
+    </a>
+</div>
+
+<div class="row g-4">
+    {% for movie in movies %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="movie-card">
+                <div class="movie-poster-container">
+                    {% if movie.poster %}
+                        <img src="{{ movie.poster.url }}" class="movie-poster" alt="{{ movie.title }}">
+                    {% else %}
+                        <div class="no-poster">
+                            <i class="fas fa-film"></i>
+                            <p class="mb-0 small">{{ movie.title }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h5 class="movie-title">{{ movie.title }}</h5>
+                    <p class="movie-meta mb-2">
+                        <span class="badge bg-secondary">{{ movie.genre }}</span>
+                        <span class="ms-2">{{ movie.year }}</span>
+                    </p>
+                    <div class="rating-container mb-3">
+                        <span class="rating-stars"><i class="fas fa-star"></i></span>
+                        <span class="rating-value">{{ movie.avg_rating|floatformat:1 }}</span>
+                        <span class="rating-count">({{ movie.rating_count }})</span>
+                    </div>
+                    <a href="{% url 'movie_detail' movie.movie_id %}" class="btn btn-primary btn-sm w-100">
+                        <i class="fas fa-info-circle me-1"></i>Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% if not user.is_authenticated %}
+<div class="text-center mt-5 p-5" style="background: rgba(229, 9, 20, 0.1); border-radius: 20px; border: 1px solid rgba(229, 9, 20, 0.2);">
+    <i class="fas fa-user-plus fa-3x mb-3" style="color: #e50914;"></i>
+    <h3 class="mb-3">Ready to Get Personalized Recommendations?</h3>
+    <p class="text-secondary mb-4">Join CineMatch and discover movies you'll love based on your taste</p>
+    <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+        <i class="fas fa-rocket me-2"></i>Sign Up Now
+    </a>
+</div>
+{% endif %}
+{% endblock %}

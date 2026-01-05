@@ -28,7 +28,7 @@ void load_movies(const char* filename, HashTable* movie_table) {
     }
     
     fclose(file);
-    printf("Movies loaded successfully.\n");
+    // printf("Movies loaded successfully.\n");  // Commented for JSON output
 }
 
 void load_users(const char* filename, HashTable* user_table) {
@@ -52,7 +52,7 @@ void load_users(const char* filename, HashTable* user_table) {
     }
     
     fclose(file);
-    printf("Users loaded successfully.\n");
+    // printf("Users loaded successfully.\n");  // Commented for JSON output
 }
 
 void load_ratings(const char* filename, Graph* graph, HashTable* movie_table, HashTable* user_table) {
@@ -89,7 +89,7 @@ void load_ratings(const char* filename, Graph* graph, HashTable* movie_table, Ha
     }
     
     fclose(file);
-    printf("Ratings loaded successfully.\n");
+    // printf("Ratings loaded successfully.\n");  // Commented for JSON output
 }
 
 void save_rating(const char* filename, int user_id, int movie_id, float rating) {

@@ -1,0 +1,76 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}My Ratings - CineMatch{% endblock %}
+
+{% block content %}
+<div class="page-header text-center mb-5">
+    <h1 class="page-title">
+        <i class="fas fa-heart me-3" style="color: #e50914;"></i>
+        My Ratings
+    </h1>
+    <p class="page-subtitle">Your personal movie collection and ratings history</p>
+</div>
+
+{% if ratings %}
+    <div class="row g-4">
+        {% for rating in ratings %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="movie-card">
+                    <div class="position-relative">
+                        <div class="movie-poster-container">
+                            {% if rating.movie.poster %}
+                                <img src="{{ rating.movie.poster.url }}" class="movie-poster" alt="{{ rating.movie.title }}">
+                            {% else %}
+                                <div class="no-poster">
+                                    <i class="fas fa-film"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-success" style="font-size: 0.9rem; padding: 0.4rem 0.7rem;">
+                                <i class="fas fa-star me-1"></i>{{ rating.rating }}
+                            </span>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 m-2">
+                            <span class="badge bg-dark" style="font-size: 0.75rem; opacity: 0.9;">
+                                {{ rating.created_at|date:"M d, Y" }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="movie-title">{{ rating.movie.title }}</h5>
+                        <p class="movie-meta mb-3">
+                            <span class="badge bg-secondary">{{ rating.movie.genre }}</span>
+                            <span class="ms-2">{{ rating.movie.year }}</span>
+                        </p>
+                        <a href="{% url 'movie_detail' rating.movie.movie_id %}" class="btn btn-primary btn-sm w-100">
+                            <i class="fas fa-eye me-1"></i>View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="text-center mt-5 p-4" style="background: rgba(229, 9, 20, 0.05); border-radius: 15px; border: 1px solid rgba(229, 9, 20, 0.1);">
+        <p class="mb-2">
+            <strong style="font-size: 1.2rem; color: #e50914;">{{ ratings|length }}</strong>
+            <span class="text-secondary">movie{{ ratings|length|pluralize }} rated</span>
+        </p>
+        <p class="mb-0 text-secondary small">
+            Rate more movies to improve your recommendations
+        </p>
+    </div>
+{% else %}
+    <div class="text-center py-5" style="background: var(--card-bg); border-radius: 20px; padding: 4rem 2rem !important;">
+        <i class="fas fa-heart-broken fa-4x mb-4" style="color: #e50914; opacity: 0.3;"></i>
+        <h3 class="mb-3">No Ratings Yet</h3>
+        <p class="text-secondary mb-4" style="max-width: 600px; margin: 0 auto;">
+            Start your movie journey by rating some films! Your ratings help us understand your taste and provide better recommendations.
+        </p>
+        <a href="{% url 'movie_list' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-film me-2"></i>Browse Movies
+        </a>
+    </div>
+{% endif %}
+{% endblock %}
