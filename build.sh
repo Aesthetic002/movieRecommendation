@@ -37,4 +37,7 @@ else:
     print(f"Movies already imported: {Movie.objects.count()}")
 END
 
+echo "Setting poster paths..."
+python manage.py set_poster_paths
+
 echo "Build complete!"
