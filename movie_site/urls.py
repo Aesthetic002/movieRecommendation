@@ -30,3 +30,7 @@ urlpatterns = [
 # Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # In production, also serve media via Django (for simple deployments)
+    # For high-traffic, use S3 or a CDN instead
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
