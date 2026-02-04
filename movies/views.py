@@ -30,11 +30,13 @@ def movie_list(request):
     if genre:
         movies = movies.filter(genre=genre)
     
-    genres = Movie.objects.values_list('genre', flat=True).distinct()
+    # Get unique genres - use a set to eliminate duplicates and sort alphabetically
+    all_genres = Movie.objects.values_list('genre', flat=True)
+    unique_genres = sorted(set(g.strip() for g in all_genres if g))
     
     return render(request, 'movies/movie_list.html', {
         'movies': movies,
-        'genres': genres,
+        'genres': unique_genres,
         'query': query,
         'selected_genre': genre
     })
